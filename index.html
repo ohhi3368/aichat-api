@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <p id="textbox">opponent: say something <br/></p>
+        <br/>
+        <input type="text" id="inputbox" placeholder="chat here">
+        <button onclick="send()">send</button>
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        function send(){
+            axios.defaults.withCredentials = true;
+            const input = document.getElementById('inputbox');
+            const inputValue = input.value;
+            const textbox = document.getElementById('textbox');
+            console.log(input.value);
+            const msgCache = textbox.innerHTML;
+            textbox.innerHTML += "you: " + input.value + "<br/>";
+            input.value = "";
+            axios.get('https://ohhi919.site/message?msg=' + inputValue, {
+                withCredentials: true
+            }).then((response) => {
+                console.log(response);
+                if(!response.data.isError){
+                    textbox.innerHTML += "opponent: " + response.data.message + "<br/>";
+                }else{
+                    textbox.innerHTML = msgCache;
+                    alert("Something went wrong..");
+                }
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    </script>
+</html>
